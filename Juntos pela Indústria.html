@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infográfico Interativo: Nova Indústria Brasil (NIB)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #111827; /* gray-900 */
+            --primary-text: #f9fafb;     /* gray-50 */
+            --secondary-text: #d1d5db;   /* gray-300 */
+            --accent-color: #818cf8;     /* indigo-400 */
+            --accent-dark: #6366f1;     /* indigo-500 */
+            --card-bg: #1f2937;         /* gray-800 */
+            --border-color: #374151;     /* gray-700 */
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-text);
+        }
+        .mission-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .mission-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+        }
+        .modal {
+            display: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            background-color: #111827;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+        .instrument-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .instrument-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--card-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 10px;
+            border: 2px solid var(--card-bg);
+        }
+        .insight-box {
+            background-color: rgba(129, 140, 248, 0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+        .simulador-card {
+            border: 2px solid var(--border-color);
+            transition: all 0.2s ease-in-out;
+            background-color: #374151;
+        }
+        .simulador-card:hover {
+            border-color: var(--accent-color);
+        }
+        .simulador-card.active {
+            border-color: var(--accent-color);
+            background-color: #312e81;
+            transform: scale(1.03);
+            box-shadow: 0 4px 14px 0 rgb(129 140 248 / 10%);
+        }
+        .wizard-step {
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .wizard-step.active {
+            display: block;
+        }
+        .answer-option {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+        .answer-option:hover {
+             border-color: var(--accent-color);
+        }
+         .question-option {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        .question-option.selected {
+            border-color: var(--accent-color);
+            background-color: var(--accent-dark);
+        }
+        .swot-card {
+             background-color: var(--card-bg);
+             border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <!-- Seção do Cabeçalho -->
+    <header class="bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white p-12 text-center shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-3 tracking-tight">Nova Indústria Brasil (NIB)</h1>
+            <p class="text-lg md:text-xl font-light text-indigo-200 max-w-3xl mx-auto">Análise Estratégica Interativa do Plano de Neoindustrialização para um Brasil mais Forte, Inovador e Sustentável</p>
+            <img src="https://i.postimg.cc/Hnk60PD9/juntos-pela-industria.png" alt="Logo Juntos pela Indústria" class="mx-auto mt-8 h-24">
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <!-- Seção de Introdução -->
+        <section class="bg-[var(--card-bg)] border border-[var(--border-color)] p-8 rounded-2xl shadow-lg mb-16 fade-in-section">
+            <h2 class="text-3xl font-bold text-gray-100 mb-8 text-center">O Diagnóstico Estratégico</h2>
+            <div class="grid md:grid-cols-3 gap-10 text-center">
+                <div>
+                    <div class="bg-red-900/50 text-red-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-100 mb-2">Desindustrialização Precoce</h3>
+                    <p class="text-gray-400 mb-3">Perda de densidade industrial e fragilização das cadeias de valor desde os anos 1980.</p>
+                    <p class="text-xs text-indigo-400 font-medium italic"><strong>Insight:</strong> A reversão deste quadro é um imperativo para a soberania econômica, exigindo um choque de competitividade e inovação.</p>
+                </div>
+                <div>
+                    <div class="bg-yellow-900/50 text-yellow-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M3 3v18h18"/><path d="M7 16V8"/><path d="M12 16V4"/><path d="M17 16v-3"/></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-100 mb-2">Baixa Complexidade</h3>
+                    <p class="text-gray-400 mb-3">Pauta exportadora concentrada em produtos de baixo valor agregado, limitando ganhos comerciais.</p>
+                     <p class="text-xs text-indigo-400 font-medium italic"><strong>Insight:</strong> Sofisticar a pauta exportadora é a chave para mover o país de fornecedor de commodities para um player tecnológico global.</p>
+                </div>
+                <div>
+                    <div class="bg-green-900/50 text-green-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-100 mb-2">Indústria como Vetor</h3>
+                    <p class="text-gray-400 mb-3">Fortalecimento industrial como chave para o desenvolvimento sustentável, social e econômico.</p>
+                    <p class="text-xs text-indigo-400 font-medium italic"><strong>Insight:</strong> A política visa usar a indústria como motor para gerar empregos de qualidade, sustentabilidade e redução de desigualdades.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção dos Instrumentos (Pilares) -->
+        <section class="mb-16 fade-in-section">
+            <h2 class="text-3xl font-bold text-gray-100 mb-8 text-center">Os 3 Pilares da Neoindustrialização</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="instrument-card p-6 rounded-2xl shadow-md">
+                    <div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 mr-4 text-indigo-400"><line x1="2" x2="22" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="4 22 4 11 12 3 20 11 20 22"/></svg><div><h3 class="text-xl font-bold">Instrumentos Financeiros</h3></div></div>
+                    <p class="text-gray-400 mb-4"><strong>R$ 300 bilhões</strong> em capital direcionado para alavancar a inovação e a produção em áreas estratégicas.</p>
+                    <div class="insight-box p-3 rounded-lg"><p class="text-xs font-medium text-indigo-300"><strong class="font-bold">Análise:</strong> O Estado mitiga o risco do investimento privado, sinalizando onde o capital encontrará apoio e demanda garantida.</p></div>
+                </div>
+                <div class="instrument-card p-6 rounded-2xl shadow-md">
+                    <div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 mr-4 text-green-400"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.5-3.5a1 1 0 1 0-3 3l-2.5-2.5a1 1 0 1 0-3 3Z"/><path d="M10 10 7.5 7.5a1 1 0 1 0-3 3L8 14"/><path d="m3 21 3-3"/><path d="M18 6l-3 3"/></svg><div><h3 class="text-xl font-bold">Ambiente de Negócios</h3></div></div>
+                    <p class="text-gray-400 mb-4">Redução do prazo de patentes para <strong>2 anos</strong> e desburocratização do comércio exterior.</p>
+                    <div class="insight-box bg-green-900/30 border-green-400 p-3 rounded-lg"><p class="text-xs font-medium text-green-300"><strong class="font-bold">Análise:</strong> Reformas estruturais que atacam o "Custo Brasil", destravando a produtividade e a competitividade a longo prazo.</p></div>
+                </div>
+                 <div class="instrument-card p-6 rounded-2xl shadow-md">
+                     <div class="flex items-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 mr-4 text-blue-400"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg><div><h3 class="text-xl font-bold">Contratações Públicas</h3></div></div>
+                    <p class="text-gray-400 mb-4">Uso do poder de compra do Estado (<strong>PAC, SUS</strong>) para criar um mercado garantido para inovações.</p>
+                    <div class="insight-box bg-blue-900/30 border-blue-400 p-3 rounded-lg"><p class="text-xs font-medium text-blue-300"><strong class="font-bold">Análise:</strong> O Estado atua como "comprador estratégico", viabilizando inovações nacionais antes da competição global.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção das Missões -->
+        <section class="mb-16 fade-in-section">
+            <h2 class="text-3xl font-bold text-gray-100 mb-8 text-center">As 6 Missões Estratégicas</h2>
+            <p class="text-center text-gray-400 mb-10 max-w-3xl mx-auto">Clique em uma missão para explorar os cenários, metas e insights estratégicos. Os gráficos demonstram a evolução projetada para cada área.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Missão 1 -->
+                <div class="mission-card p-6 rounded-2xl shadow-lg cursor-pointer text-center" onclick="openModal(1)">
+                    <div class="bg-green-900/50 text-green-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M2 22 10 6l-2.5-2.5S3 6 3 8s2 6 2 8-2 4-2 4Z"/><path d="M12 22 20 6l-2.5-2.5S11 6 11 8s2 6 2 8-2 4-2 4Z"/><path d="M11 8s2-2 4-2 4 2 4 2"/><path d="M3 8s2-2 4-2 4 2 4 2"/></svg></div>
+                    <h3 class="text-xl font-bold text-gray-200">Missão 1</h3><p class="text-gray-400">Cadeias Agroindustriais Sustentáveis e Digitais</p>
+                </div>
+                <!-- Missão 2 -->
+                <div class="mission-card p-6 rounded-2xl shadow-lg cursor-pointer text-center" onclick="openModal(2)">
+                    <div class="bg-red-900/50 text-red-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M4.8 2.3A.3.3 0 1 0 5.4 2l1.5 6.3c.1.5.4 1 .8 1.3l2.2 2.2c1.2 1.2 3.3 1.2 4.5 0l2.1-2.1c1.2-1.2 1.2-3.3 0-4.5L14.3 3c-.3-.3-.8-.6-1.3-.8L6.7.8a.3.3 0 1 0-.6.6Z"/><path d="M22 12c-1.2-1.2-3.3-1.2-4.5 0l-4.5 4.5c-1.2 1.2-1.2 3.3 0 4.5s3.3 1.2 4.5 0l4.5-4.5c1.2-1.2 1.2-3.3 0-4.5Z"/></svg></div>
+                    <h3 class="text-xl font-bold text-gray-200">Missão 2</h3><p class="text-gray-400">Complexo Industrial da Saúde Resiliente</p>
+                </div>
+                <!-- Missão 3 -->
+                <div class="mission-card p-6 rounded-2xl shadow-lg cursor-pointer text-center" onclick="openModal(3)">
+                    <div class="bg-blue-900/50 text-blue-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg></div>
+                    <h3 class="text-xl font-bold text-gray-200">Missão 3</h3><p class="text-gray-400">Infraestrutura e Mobilidade Sustentáveis</p>
+                </div>
+                <!-- Missão 4 -->
+                <div class="mission-card p-6 rounded-2xl shadow-lg cursor-pointer text-center" onclick="openModal(4)">
+                    <div class="bg-purple-900/50 text-purple-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M12 2a5 5 0 0 0-5 5v1a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5Z"/><path d="M17 9.5a2.5 2.5 0 1 0 0-5"/><path d="M7 9.5a2.5 2.5 0 1 1 0-5"/><path d="M12 12v3a1.5 1.5 0 0 0 3 0v-3a1.5 1.5 0 0 1-3 0Z"/><path d="M4 14.5a2.5 2.5 0 1 1 0-5"/><path d="M20 14.5a2.5 2.5 0 1 0 0-5"/><path d="M12 22a2.5 2.5 0 1 0 0-5 2.5 2.5 0 1 0 0 5Z"/><path d="M4 17h4a1 1 0 0 1 1 1v1"/><path d="M16 17h-4a1 1 0 0 0-1 1v1"/></svg></div>
+                    <h3 class="text-xl font-bold text-gray-200">Missão 4</h3><p class="text-gray-400">Transformação Digital da Indústria</p>
+                </div>
+                <!-- Missão 5 -->
+                <div class="mission-card p-6 rounded-2xl shadow-lg cursor-pointer text-center" onclick="openModal(5)">
+                    <div class="bg-teal-900/50 text-teal-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-3.037l5.363-8.195a1.83 1.83 0 0 1 3.14 0l5.363 8.195A1.83 1.83 0 0 1 19.185 19H17"/><path d="M12 19v-3l-2-2"/><path d="M14 17v2"/><path d="m11 12 1-1 1 1"/><path d="m7 12-2 3h4"/><path d="m17 12 2 3h-4"/></svg></div>
+                    <h3 class="text-xl font-bold text-gray-200">Missão 5</h3><p class="text-gray-400">Bioeconomia e Transição Energética</p>
+                </div>
+                <!-- Missão 6 -->
+                <div class="mission-card p-6 rounded-2xl shadow-lg cursor-pointer text-center" onclick="openModal(6)">
+                    <div class="bg-gray-600/50 text-gray-300 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                    <h3 class="text-xl font-bold text-gray-200">Missão 6</h3><p class="text-gray-400">Tecnologias para Soberania e Defesa</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção do Simulador de Soluções -->
+        <section class="bg-[var(--card-bg)] border border-[var(--border-color)] p-8 rounded-2xl shadow-lg mb-12 fade-in-section">
+            <h2 class="text-3xl font-bold text-gray-100 mb-2 text-center">Simulador de Soluções Estratégicas</h2>
+            <p class="text-center text-gray-400 mb-10 max-w-3xl mx-auto">Responda ao diagnóstico para descobrir uma solução integrada e um plano de ação customizado, unindo o melhor do SEBRAE, SENAI e IEL.</p>
+            
+            <div id="simulador-container" class="relative">
+                <!-- Passo 1: Seleção de Segmento -->
+                <div id="step-1" class="wizard-step active">
+                    <h3 class="text-xl font-semibold mb-6 text-center text-gray-300">Passo 1: Qual o seu segmento industrial?</h3>
+                    <div id="segment-selector" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="simulador-card p-6 rounded-lg cursor-pointer flex flex-col items-center text-center" onclick="selectSegment('Alimentos e Bebidas')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 mb-3 text-indigo-400"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v11"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/></svg>
+                            <p class="font-bold text-lg">Alimentos e Bebidas</p>
+                        </div>
+                        <div class="simulador-card p-6 rounded-lg cursor-pointer flex flex-col items-center text-center" onclick="selectSegment('Construção Civil')">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 mb-3 text-indigo-400"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v3"/></svg>
+                            <p class="font-bold text-lg">Construção Civil</p>
+                        </div>
+                        <div class="simulador-card p-6 rounded-lg cursor-pointer flex flex-col items-center text-center" onclick="selectSegment('Metalmecânica')">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 mb-3 text-indigo-400"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                            <p class="font-bold text-lg">Metalmecânica</p>
+                        </div>
+                         <div class="simulador-card p-6 rounded-lg cursor-pointer flex flex-col items-center text-center" onclick="selectSegment('Moda e Vestuário')">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 mb-3 text-indigo-400"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.47" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>
+                            <p class="font-bold text-lg">Moda e Vestuário</p>
+                        </div>
+                         <div class="simulador-card p-6 rounded-lg cursor-pointer flex flex-col items-center text-center" onclick="selectSegment('Madeira e Mobiliário')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 mb-3 text-indigo-400"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0Z"/><path d="M5 18v2"/><path d="M19 18v2"/></svg>
+                            <p class="font-bold text-lg">Madeira e Mobiliário</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 2: Diagnóstico Principal -->
+                <div id="step-2" class="wizard-step">
+                    <h3 class="text-xl font-semibold mb-2 text-center text-gray-300">Passo 2: Desafio Principal</h3>
+                    <div id="challenge-container" class="p-4"></div>
+                </div>
+
+                <!-- Passo 3: Questionário Específico -->
+                <div id="step-3" class="wizard-step">
+                    <h3 class="text-xl font-semibold mb-2 text-center text-gray-300">Passo 3: Diagnóstico Detalhado</h3>
+                    <div id="questionnaire-container" class="p-4"></div>
+                </div>
+
+                <!-- Passo 4: Resultado e Plano de Ação -->
+                <div id="step-4" class="wizard-step">
+                     <h3 class="text-2xl font-bold mb-8 text-center text-gray-200">Seu Diagnóstico Estratégico</h3>
+                     <div id="solution-container" class="space-y-12"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="text-center p-8 bg-gray-900 text-gray-400 mt-16">
+        <p>Infográfico gerado com base no Plano de Ação 2024-2026 da Nova Indústria Brasil (NIB) e no portfólio "Juntos pela Indústria".</p>
+        <p class="text-sm">Fonte dos dados: Relatório Executivo (NIB) e Apresentação Institucional (SEBRAE/SENAI/IEL).</p>
+    </footer>
+
+    <!-- Modals -->
+    <div id="missionModal" class="modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+        <div class="modal-content rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto transform scale-95">
+            <div class="sticky top-0 bg-gray-900/80 backdrop-blur-sm p-6 border-b border-[var(--border-color)] z-10 flex justify-between items-center">
+                <h2 id="modalTitle" class="text-2xl font-bold text-gray-100"></h2>
+                <button onclick="closeModal('missionModal')" class="text-gray-400 hover:text-red-500 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="modalBody" class="p-8"></div>
+        </div>
+    </div>
+    
+    <script>
+        // --- Lógica dos Modais ---
+        let currentChart = null;
+        let radarChart = null;
+
+        function openModal(missionId) {
+            window.currentMissionId = missionId;
+            const modal = document.getElementById('missionModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            const data = missionData[missionId];
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalBody').innerHTML = data.content.replace('{{INSIGHT}}', data.insight);
+            
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                modal.querySelector('.modal-content').style.transform = 'scale(1)';
+                renderChart(missionId);
+            }, 50);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.opacity = '0';
+            modal.querySelector('.modal-content').style.transform = 'scale(0.95)';
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                if (modalId === 'missionModal' && currentChart) {
+                    currentChart.destroy();
+                }
+            }, 300);
+        }
+
+        window.onclick = event => {
+            const missionModal = document.getElementById('missionModal');
+            if (event.target == missionModal) {
+                closeModal('missionModal');
+            }
+        }
+
+        function renderChart(missionId) {
+            if (currentChart) { currentChart.destroy(); }
+            const chartData = missionData[missionId].chart;
+            const ctx = document.getElementById('chart' + missionId).getContext('2d');
+            currentChart = new Chart(ctx, {
+                type: chartData.type,
+                data: { labels: chartData.labels, datasets: [{ label: chartData.label, data: chartData.data, backgroundColor: chartData.backgroundColor, borderRadius: 5 }] },
+                options: {
+                    responsive: true, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label || ''}: ${ctx.parsed.y.toFixed(1)}%` }}},
+                    scales: {  y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#d1d5db', callback: value => value + '%' }  }, x: { grid: { display: false }, ticks: { color: '#d1d5db' } } }
+                }
+            });
+        }
+        
+        // --- Animações de Scroll ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-section').forEach(section => observer.observe(section));
+
+        // --- LÓGICA DO SIMULADOR ---
+        const missionData = {
+            1: {
+                title: 'Missão 1: Cadeias Agroindustriais Sustentáveis e Digitais',
+                insight: 'A missão transforma o agronegócio de uma potência em commodities para um líder em AgTech e bioinsumos. Para o investidor, a oportunidade está em escalar tecnologias que agreguem valor e sustentabilidade, atendendo a uma demanda global por alimentos rastreáveis e de baixo carbono.',
+                content: `
+                    <p class="text-gray-400 mb-6"><strong>Objetivo:</strong> Fortalecer a segurança alimentar, nutricional e energética, agregando valor à produção agropecuária por meio da sustentabilidade e digitalização.</p>
+                    <div class="insight-box p-4 rounded-lg mb-6"><p class="text-sm font-medium text-indigo-300"><strong class="font-bold">Análise Estratégica:</strong> {{INSIGHT}}</p></div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Metas Estratégicas</h4><p class="text-sm text-gray-500 mb-4">Mecanização da agricultura familiar</p><canvas id="chart1"></canvas></div>
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Cenário e Desafios</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Cenário Atual:</strong> Apenas 18% da agricultura familiar é mecanizada.</li><li><strong>Desafios:</strong> Aumentar o valor agregado, mecanizar a agricultura familiar e reduzir a dependência de insumos externos.</li></ul><h4 class="text-lg font-semibold text-gray-200 mt-6 mb-2">Instrumentos-Chave</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Financeiro:</strong> R$ 400 milhões (FNDCT) para bioinsumos e máquinas.</li><li><strong>Compras Públicas:</strong> Uso do PAA e PNAE para gerar demanda estável.</li></ul></div>
+                    </div>`,
+                chart: { type: 'bar', labels: ['Cenário Atual', 'Meta 2026', 'Meta 2033'], data: [18, 28, 35], label: 'Mecanização (%)', backgroundColor: ['#fdba74', '#facc15', '#a3e635'] }
+            },
+            2: {
+                title: 'Missão 2: Complexo Industrial da Saúde Resiliente',
+                insight: 'Esta missão é um claro sinal de que a autonomia sanitária é uma prioridade de segurança nacional. O poder de compra do SUS cria um vasto mercado para a produção local, representando uma oportunidade única de substituição de importações em IFAs e dispositivos médicos.',
+                content: `
+                    <p class="text-gray-400 mb-6"><strong>Objetivo:</strong> Reduzir a dependência externa em produtos de saúde, fortalecer a capacidade produtiva do SUS e garantir a segurança sanitária nacional.</p>
+                    <div class="insight-box p-4 rounded-lg mb-6"><p class="text-sm font-medium text-indigo-300"><strong class="font-bold">Análise Estratégica:</strong> {{INSIGHT}}</p></div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Metas Estratégicas</h4><p class="text-sm text-gray-500 mb-4">Produção nacional para suprir as necessidades do país</p><canvas id="chart2"></canvas></div>
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Cenário e Desafios</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Cenário Atual:</strong> Produção nacional responde por apenas 42% das necessidades.</li><li><strong>Desafios:</strong> 90% dos insumos farmacêuticos (IFAs) são importados.</li></ul><h4 class="text-lg font-semibold text-gray-200 mt-6 mb-2">Instrumentos-Chave</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Financeiro:</strong> R$ 500 milhões (FNDCT) para inovação em IFAs, terapias e dispositivos.</li><li><strong>Compras Públicas:</strong> Novo PAC Saúde (R$ 30,5 bi) para direcionar o poder de compra.</li></ul></div>
+                    </div>`,
+                chart: { type: 'bar', labels: ['Cenário Atual', 'Meta 2026', 'Meta 2033'], data: [42, 50, 70], label: 'Suprimento Nacional (%)', backgroundColor: ['#fdba74', '#facc15', '#a3e635'] }
+            },
+            3: {
+                title: 'Missão 3: Infraestrutura e Mobilidade Sustentáveis',
+                insight: 'Impulsionada pelo Novo PAC e pelo programa MOVER, esta missão cria uma demanda massiva para a eletrificação da frota e modernização da infraestrutura. O foco em baterias e sistemas de propulsão nacionais abre uma janela de oportunidade para posicionar o Brasil na cadeia global de mobilidade sustentável.',
+                content: `
+                    <p class="text-gray-400 mb-6"><strong>Objetivo:</strong> Melhorar a qualidade de vida nas cidades e modernizar a infraestrutura do país com foco em sustentabilidade e inovação.</p>
+                    <div class="insight-box p-4 rounded-lg mb-6"><p class="text-sm font-medium text-indigo-300"><strong class="font-bold">Análise Estratégica:</strong> {{INSIGHT}}</p></div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Metas Estratégicas</h4><p class="text-sm text-gray-500 mb-4">Participação de veículos eletrificados nas vendas</p><canvas id="chart3"></canvas></div>
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Cenário e Desafios</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Cenário Atual:</strong> Tempo médio de deslocamento de 4,8 horas semanais.</li><li><strong>Desafios:</strong> Dependência de componentes para mobilidade elétrica e qualificação de mão de obra.</li></ul><h4 class="text-lg font-semibold text-gray-200 mt-6 mb-2">Instrumentos-Chave</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Financeiro:</strong> Programa MOVER com incentivos fiscais para P&D no setor automotivo.</li><li><strong>Compras Públicas:</strong> "PAC Seleções" com R$ 65 bilhões para projetos subnacionais.</li></ul></div>
+                    </div>`,
+                chart: { type: 'bar', labels: ['Meta 2026', 'Meta 2033'], data: [3, 33], label: 'Veículos Eletrificados (%)', backgroundColor: ['#facc15', '#a3e635'] }
+            },
+            4: {
+                title: 'Missão 4: Transformação Digital da Indústria',
+                insight: 'Com a baixa digitalização atual, o potencial de crescimento é imenso. A missão foca em reduzir a dependência tecnológica em áreas críticas como semicondutores, criando um ecossistema favorável para startups e empresas de tecnologia que ofereçam soluções para a Indústria 4.0.',
+                content: `
+                    <p class="text-gray-400 mb-6"><strong>Objetivo:</strong> Superar o baixo nível de digitalização e reduzir a dependência de hardware e software importados para ampliar a produtividade.</p>
+                    <div class="insight-box p-4 rounded-lg mb-6"><p class="text-sm font-medium text-indigo-300"><strong class="font-bold">Análise Estratégica:</strong> {{INSIGHT}}</p></div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Metas Estratégicas</h4><p class="text-sm text-gray-500 mb-4">Empresas industriais digitalizadas</p><canvas id="chart4"></canvas></div>
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Cenário e Desafios</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Cenário Atual:</strong> Apenas 23,5% das empresas industriais são digitalizadas.</li><li><strong>Desafios:</strong> Formação de mão de obra em TICs e dependência de hardware importado.</li></ul><h4 class="text-lg font-semibold text-gray-200 mt-6 mb-2">Instrumentos-Chave</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Financeiro:</strong> R$ 180 mi para semicondutores e R$ 260 mi para tecnologias digitais.</li><li><strong>Ambiente de Negócios:</strong> Depreciação acelerada para modernização do parque fabril.</li></ul></div>
+                    </div>`,
+                chart: { type: 'bar', labels: ['Cenário Atual', 'Meta 2026', 'Meta 2033'], data: [23.5, 25, 50], label: 'Empresas Digitalizadas (%)', backgroundColor: ['#fdba74', '#facc15', '#a3e635'] }
+            },
+            5: {
+                title: 'Missão 5: Bioeconomia e Transição Energética',
+                insight: 'Alavancando as vantagens competitivas do Brasil (biodiversidade e matriz energética limpa), esta missão abre mercados emergentes com potencial de liderança global, como hidrogênio verde e SAF. Investir aqui é apostar na vanguarda da nova economia de baixo carbono.',
+                content: `
+                    <p class="text-gray-400 mb-6"><strong>Objetivo:</strong> Posicionar o país como líder na economia verde, aproveitando a biodiversidade e o potencial em energias renováveis.</p>
+                    <div class="insight-box p-4 rounded-lg mb-6"><p class="text-sm font-medium text-indigo-300"><strong class="font-bold">Análise Estratégica:</strong> {{INSIGHT}}</p></div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Metas Estratégicas</h4><p class="text-sm text-gray-500 mb-4">Ampliação da participação de biocombustíveis</p><canvas id="chart5"></canvas></div>
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Cenário e Desafios</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Cenário Atual:</strong> 21,4% de participação de biocombustíveis na matriz de transportes.</li><li><strong>Desafios:</strong> Nacionalizar a produção de equipamentos para energias renováveis.</li></ul><h4 class="text-lg font-semibold text-gray-200 mt-6 mb-2">Instrumentos-Chave</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Financeiro:</strong> Fundo de R$ 700 milhões (FNDCT) para inovação em bioeconomia.</li><li><strong>Ambiente de Negócios:</strong> Regulação do Mercado de Carbono e "Selo Verde Brasil".</li></ul></div>
+                    </div>`,
+                chart: { type: 'bar', labels: ['Cenário Atual', 'Meta 2026 (+27%)', 'Meta 2033 (+50%)'], data: [21.4, 21.4 * 1.27, 21.4 * 1.5], label: 'Participação de Biocombustíveis (%)', backgroundColor: ['#fdba74', '#facc15', '#a3e635'] }
+            },
+            6: {
+                title: 'Missão 6: Tecnologias para Soberania e Defesa',
+                insight: 'A indústria de defesa é posicionada como uma incubadora de tecnologias de ponta com aplicações duais (civis e militares). O investimento gera transbordamentos tecnológicos para setores como telecomunicações e agronegócio, diversificando o portfólio de oportunidades.',
+                content: `
+                    <p class="text-gray-400 mb-6"><strong>Objetivo:</strong> Desenvolver autonomia em tecnologias críticas para garantir a soberania e a segurança do país, adensando a Base Industrial de Defesa.</p>
+                    <div class="insight-box p-4 rounded-lg mb-6"><p class="text-sm font-medium text-indigo-300"><strong class="font-bold">Análise Estratégica:</strong> {{INSIGHT}}</p></div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Metas Estratégicas</h4><p class="text-sm text-gray-500 mb-4">Domínio das tecnologias críticas para a defesa</p><canvas id="chart6"></canvas></div>
+                        <div><h4 class="text-lg font-semibold text-gray-200 mb-2">Cenário e Desafios</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Desafios:</strong> Adensar a cadeia produtiva de defesa, melhorar a infraestrutura laboratorial e financiar a exportação.</li></ul><h4 class="text-lg font-semibold text-gray-200 mt-6 mb-2">Instrumentos-Chave</h4><ul class="list-disc list-inside space-y-2 text-gray-300"><li><strong>Financeiro:</strong> R$ 400 milhões (FNDCT) para projetos de inovação.</li><li><strong>Compras Públicas:</strong> PAC direciona R$ 52,8 bilhões em investimentos estratégicos.</li></ul></div>
+                    </div>`,
+                chart: { type: 'bar', labels: ['Meta 2026', 'Meta 2033'], data: [55, 75], label: 'Domínio Tecnológico (%)', backgroundColor: ['#facc15', '#a3e635'] }
+            }
+        };
+        const simulatorData = {
+            'Alimentos e Bebidas': {
+                questions: [{
+                    question: "Qual o principal desafio que sua indústria de alimentos enfrenta hoje em Goiás?",
+                    answers: [
+                        { text: "Otimizar a produção e reduzir desperdícios.", diagnosisKey: "produtividade" },
+                        { text: "Garantir a conformidade com normas e a segurança dos alimentos.", diagnosisKey: "normas" },
+                        { text: "Inovar, criando novos produtos ou sabores.", diagnosisKey: "inovacao" },
+                        { text: "Melhorar a gestão financeira e conseguir crédito.", diagnosisKey: "financas" }
+                    ]
+                }],
+                diagnoses: {
+                    produtividade: {
+                        questionnaire: [{
+                           question: "Como você classifica o controle sobre perdas e desperdícios de matéria-prima no seu processo?",
+                           options: [
+                               { text: "Baixo. Temos muitas perdas não monitoradas.", scores: {'Produtividade': 15, 'Gestão de Custos': 20, 'Qualidade': 40, 'Digitalização': 30} },
+                               { text: "Razoável. Monitoramos o básico, mas sabemos que há espaço para melhorar.", scores: {'Produtividade': 40, 'Gestão de Custos': 45, 'Qualidade': 60, 'Digitalização': 40} },
+                               { text: "Alto. Temos indicadores e ações claras para a redução de perdas.", scores: {'Produtividade': 70, 'Gestão de Custos': 75, 'Qualidade': 80, 'Digitalização': 50} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Setor consolidado em Goiás, impulsionado pela força do agronegócio.", "Mão de obra com experiência na produção tradicional."],
+                            fraquezas: ["Processos produtivos com baixa eficiência e altos índices de desperdício.", "Dificuldade em adotar práticas de manufatura enxuta."],
+                            oportunidades: ["Acesso ao programa Brasil Mais Produtivo para consultoria subsidiada.", "Demanda crescente por produtos com maior valor agregado e eficiência."],
+                            ameacas: ["Aumento do custo de matéria-prima e energia.", "Concorrência com indústrias mais automatizadas."]
+                        },
+                        radar: {
+                            labels: ['Produtividade', 'Gestão de Custos', 'Qualidade', 'Digitalização'],
+                            potencial: [85, 80, 75, 55]
+                        },
+                        solutionName: "Brasil Mais Produtivo & PIC",
+                        solutionDescription: "Implementação de metodologias Lean Manufacturing para otimizar processos, reduzir custos e eliminar gargalos, gerando um ganho de produtividade esperado de, no mínimo, 20%.",
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico e Mapeamento', description: 'Consultores do SENAI realizam um Mapeamento do Fluxo de Valor (VSM) para identificar os principais gargalos e desperdícios na sua linha de produção.' },
+                            { step: 2, title: 'Implementação Rápida (Kaizen)', description: 'Realização de eventos de melhoria focados em problemas específicos, aplicando ferramentas como 5S para organização e SMED para redução de tempo de setup.' },
+                            { step: 3, title: 'Capacitação da Equipe', description: 'Treinamento prático para os colaboradores sobre os princípios da manufatura enxuta, garantindo a sustentabilidade das melhorias implementadas.' },
+                            { step: 4, title: 'Monitoramento de Resultados', description: 'Criação de indicadores de desempenho (KPIs) para acompanhar os ganhos de produtividade, como o OEE (Eficiência Geral do Equipamento).' }
+                        ]
+                    },
+                    normas: {
+                        questionnaire: [{
+                           question: "Qual o nível de maturidade dos seus controles e documentação de Boas Práticas de Fabricação (BPF)?",
+                           options: [
+                               { text: "Iniciante. Temos pouco ou nenhum controle documentado.", scores: {'Conformidade': 20, 'Marca': 30, 'Eficiência': 40, 'Acesso a Mercados': 25} },
+                               { text: "Intermediário. Temos os principais documentos, mas a aplicação prática falha.", scores: {'Conformidade': 50, 'Marca': 55, 'Eficiência': 60, 'Acesso a Mercados': 45} },
+                               { text: "Avançado. Nossos processos são bem documentados e seguidos rigorosamente pela equipe.", scores: {'Conformidade': 80, 'Marca': 75, 'Eficiência': 70, 'Acesso a Mercados': 60} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Reconhecimento da qualidade dos produtos goianos.", "Cadeia de fornecedores locais bem estabelecida."],
+                            fraquezas: ["Processos não padronizados e dificuldade em atender a todas as exigências sanitárias.", "Risco de multas e interdições por não conformidade."],
+                            oportunidades: ["Adesão ao programa Alimento Confiável para obter um selo de qualidade reconhecido.", "Acesso a novos mercados que exigem certificação."],
+                            ameacas: ["Legislação sanitária cada vez mais rigorosa.", "Danos à reputação da marca em caso de problemas de segurança alimentar."]
+                        },
+                        radar: {
+                            labels: ['Conformidade', 'Marca', 'Eficiência', 'Acesso a Mercados'],
+                            potencial: [95, 80, 70, 75]
+                        },
+                        solutionName: "Programa Alimento Confiável",
+                        solutionDescription: "Jornada completa para obter a certificação em Boas Práticas de Fabricação (BPF), aumentando a credibilidade da sua marca e abrindo portas para novos mercados.",
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico de Conformidade', description: 'Um especialista do SENAI realiza uma auditoria completa na sua planta para avaliar o nível de aderência às normas sanitárias vigentes.' },
+                            { step: 2, title: 'Plano de Ação Personalizado', description: 'Com base no diagnóstico, é elaborado um plano detalhado com todas as ações corretivas necessárias, definindo prioridades, responsáveis e prazos.' },
+                            { step: 3, title: 'Consultoria e Implementação', description: 'Acompanhamento de um consultor para ajudar na execução das adequações, como revisão de POPs, treinamento da equipe e melhorias na infraestrutura.' },
+                            { step: 4, title: 'Auditoria de Certificação', description: 'Após a implementação das melhorias, uma auditoria final é realizada para conceder o selo "Alimento Confiável", que tem validade de 12 meses.' }
+                        ]
+                    },
+                     inovacao: {
+                         questionnaire: [{
+                           question: "Como sua empresa busca desenvolver novos produtos?",
+                           options: [
+                               { text: "Reativamente, apenas quando um concorrente lança algo novo.", scores: {'Inovação': 15, 'Marca': 25, 'Produtividade': 40, 'Finanças': 30} },
+                               { text: "Ocasionalmente, com base em ideias internas, mas sem um processo formal.", scores: {'Inovação': 40, 'Marca': 50, 'Produtividade': 50, 'Finanças': 45} },
+                               { text: "De forma estruturada, com pesquisa de mercado e um funil de projetos.", scores: {'Inovação': 75, 'Marca': 70, 'Produtividade': 60, 'Finanças': 60} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Rica biodiversidade do Cerrado como fonte de ingredientes únicos.", "Proximidade com grandes centros de pesquisa agropecuária."],
+                            fraquezas: ["Baixo investimento em P&D para desenvolvimento de novos produtos.", "Dificuldade em escalar a produção de produtos inovadores."],
+                            oportunidades: ["Acesso a recursos não reembolsáveis do Edital de Inovação SEBRAE/SENAI.", "Tendência de consumo por alimentos funcionais, saudáveis e com apelo regional."],
+                            ameacas: ["Concorrência com grandes players que possuem P&D estruturado.", "Tempo e custo para aprovação de novos ingredientes e produtos junto aos órgãos reguladores."]
+                        },
+                        radar: {
+                            labels: ['Inovação', 'Marca', 'Produtividade', 'Finanças'],
+                            potencial: [85, 75, 65, 70]
+                        },
+                        solutionName: "Edital Regional de Inovação",
+                        solutionDescription: "Acesso a recursos financeiros não reembolsáveis para co-financiar projetos de P&D, como o desenvolvimento de novos produtos, ingredientes funcionais ou tecnologias de processo.",
+                        actionPlan: [
+                            { step: 1, title: 'Estruturação da Ideia', description: 'Mentoria com especialistas do SEBRAE/SENAI para transformar a ideia inovadora em um pré-projeto competitivo, com escopo, metas e orçamento definidos.' },
+                            { step: 2, title: 'Submissão ao Edital', description: 'Apoio na preparação e submissão de toda a documentação necessária para concorrer aos recursos do edital de inovação.' },
+                            { step: 3, title: 'Desenvolvimento Técnico', description: 'Execução do projeto em parceria com os Institutos SENAI de Tecnologia, utilizando laboratórios e pesquisadores para desenvolver e validar o novo produto ou processo.' },
+                            { step: 4, title: 'Validação e Mercado', description: 'Apoio na fase final do projeto para testes de mercado, registro de propriedade intelectual e plano de comercialização da inovação gerada.' }
+                        ]
+                    },
+                    financas: {
+                        questionnaire: [{
+                           question: "Qual ferramenta você usa para controlar o fluxo de caixa da sua empresa?",
+                           options: [
+                               { text: "Nenhuma ou apenas o extrato bancário.", scores: {'Gestão Financeira': 10, 'Acesso a Crédito': 15, 'Produtividade': 30, 'Inovação': 20} },
+                               { text: "Uma planilha simples, mas que nem sempre está atualizada.", scores: {'Gestão Financeira': 35, 'Acesso a Crédito': 30, 'Produtividade': 45, 'Inovação': 35} },
+                               { text: "Um software de gestão (ERP) que integra todas as áreas.", scores: {'Gestão Financeira': 80, 'Acesso a Crédito': 70, 'Produtividade': 60, 'Inovação': 50} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Setor com acesso a linhas de crédito específicas para o agronegócio.", "Potencial de crescimento e geração de caixa contínua."],
+                            fraquezas: ["Gestão financeira informal, baseada em controles simples.", "Dificuldade em comprovar garantias para acesso a crédito de maior volume."],
+                            oportunidades: ["Participação no programa Conexão Financeira para capacitação e acesso facilitado a crédito.", "Melhoria da gestão para tomada de decisões mais estratégicas sobre investimentos."],
+                            ameacas: ["Alta volatilidade nos preços das commodities, impactando o fluxo de caixa.", "Aumento das taxas de juros, encarecendo o crédito."]
+                        },
+                        radar: {
+                            labels: ['Gestão Financeira', 'Acesso a Crédito', 'Produtividade', 'Inovação'],
+                            potencial: [85, 75, 55, 45]
+                        },
+                        solutionName: "Programa Conexão Financeira",
+                        solutionDescription: "Capacitação prática em gestão de finanças, com orientação individualizada e conexão direta com agentes de crédito para facilitar o acesso a capital de giro e investimentos.",
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico Financeiro 360°', description: 'Consultor do SEBRAE realiza uma análise aprofundada da saúde financeira da sua empresa (fluxo de caixa, DRE, balanço).' },
+                            { step: 2, title: 'Capacitação Prática', description: 'Participação em oficinas sobre temas essenciais como formação de preço de venda, controle de fluxo de caixa e planejamento financeiro.' },
+                            { step: 3, title: 'Consultoria Individual', description: 'Sessões de mentoria para aplicar o conhecimento na realidade da sua empresa, organizando as finanças e preparando um plano de investimento.' },
+                            { step: 4, title: 'Rodada de Crédito', description: 'Apresentação do seu projeto de investimento diretamente para bancos, cooperativas e agências de fomento em eventos exclusivos.' }
+                        ]
+                    }
+                }
+            },
+            'Construção Civil': {
+                 questions: [{
+                    question: "Qual é o principal obstáculo para o crescimento da sua construtora hoje em Goiás?",
+                    answers: [
+                        { text: "Baixa produtividade e desperdício de materiais no canteiro.", diagnosisKey: "produtividade" },
+                        { text: "Gestão de obras manual e falta de tecnologia.", diagnosisKey: "digitalizacao" },
+                        { text: "Dificuldade em prospectar obras maiores e novos clientes.", diagnosisKey: "mercado" }
+                    ]
+                }],
+                diagnoses: {
+                    produtividade: {
+                        questionnaire: [{
+                           question: "Como você avalia o planejamento e o controle da sua obra?",
+                           options: [
+                               { text: "Fraco. Apagamos incêndios e o cronograma está sempre atrasado.", scores: {'Produtividade': 15, 'Gestão de Custos': 20, 'Qualidade': 30, 'Digitalização': 25} },
+                               { text: "Razoável. Usamos cronogramas, mas a execução ainda tem muitos imprevistos.", scores: {'Produtividade': 45, 'Gestão de Custos': 50, 'Qualidade': 55, 'Digitalização': 40} },
+                               { text: "Forte. Temos um planejamento detalhado e sistemas de controle que garantem o prazo.", scores: {'Produtividade': 75, 'Gestão de Custos': 80, 'Qualidade': 70, 'Digitalização': 60} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Setor aquecido em Goiás, com alta demanda por novas construções.", "Mão de obra experiente em métodos construtivos tradicionais."],
+                            fraquezas: ["Processos construtivos com alto índice de desperdício de materiais.", "Baixa produtividade da mão de obra por falta de planejamento e padronização."],
+                            oportunidades: ["Implementar conceitos de construção enxuta (Lean Construction) com apoio do SENAI.", "Adoção de sistemas construtivos industrializados para aumentar a velocidade e reduzir custos."],
+                            ameacas: ["Aumento expressivo no custo dos insumos (aço, cimento).", "Escassez de mão de obra qualificada para novos métodos construtivos."]
+                        },
+                        radar: {
+                            labels: ['Produtividade', 'Gestão de Custos', 'Qualidade', 'Digitalização'],
+                            potencial: [80, 75, 65, 50]
+                        },
+                        solutionName: "Brasil Mais Produtivo (Lean Construction)",
+                        solutionDescription: "Consultoria focada em otimizar a gestão do canteiro de obras e processos construtivos para reduzir desperdícios, eliminar atividades que não agregam valor e aumentar a eficiência.",
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico do Canteiro', description: 'Mapeamento do fluxo de valor da obra para identificar as principais fontes de perda (espera, transporte, superprodução, etc.).' },
+                            { step: 2, title: 'Planejamento e Controle da Produção', description: 'Implementação de ferramentas como a Linha de Balanço para um planejamento mais visual e integrado das atividades da obra.' },
+                            { step: 3, title: 'Organização do Canteiro (5S)', description: 'Aplicação da metodologia 5S para organizar ferramentas, materiais e o fluxo de pessoas, aumentando a segurança e a eficiência.' },
+                            { step: 4, title: 'Capacitação e Engajamento', description: 'Treinamento das equipes de obra (mestres, encarregados e operários) nos novos processos para garantir a adesão e a melhoria contínua.' }
+                        ]
+                    },
+                     digitalizacao: {
+                         questionnaire: [{
+                           question: "Sua empresa utiliza a tecnologia BIM (Modelagem da Informação da Construção) em seus projetos?",
+                           options: [
+                               { text: "Não, e não sei por onde começar.", scores: {'Digitalização': 10, 'Produtividade': 25, 'Controle': 20, 'Inovação': 15} },
+                               { text: "Sim, em alguns projetos-piloto, mas não é um padrão.", scores: {'Digitalização': 40, 'Produtividade': 50, 'Controle': 55, 'Inovação': 45} },
+                               { text: "Sim, é parte integrante do nosso processo, desde o projeto até a obra.", scores: {'Digitalização': 80, 'Produtividade': 75, 'Controle': 85, 'Inovação': 70} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Crescente número de startups (construtechs) oferecendo soluções para o setor.", "Mercado goiano aberto à inovação e novas tecnologias."],
+                            fraquezas: ["Gestão de obras baseada em planilhas e comunicação informal.", "Baixa adoção de tecnologias como BIM (Modelagem da Informação da Construção)."],
+                            oportunidades: ["Adesão ao programa Inove+Digital para subsidiar a implementação de softwares de gestão.", "Uso de drones e aplicativos para monitoramento remoto e mais eficiente das obras."],
+                            ameacas: ["Resistência cultural à mudança por parte das equipes mais antigas.", "Custo inicial de implementação de softwares e treinamento de pessoal."]
+                        },
+                        radar: {
+                            labels: ['Digitalização', 'Produtividade', 'Controle', 'Inovação'],
+                            potencial: [80, 70, 85, 75]
+                        },
+                        solutionName: "Inove+Digital & PIC",
+                        solutionDescription: "Jornada de transformação digital que vai desde a implementação de softwares de gestão de obras até a introdução de tecnologias avançadas como BIM e Inteligência Artificial.",
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico de Maturidade Digital', description: 'Consultor do IEL/SEBRAE avalia os processos atuais e identifica as oportunidades de digitalização com maior potencial de impacto.' },
+                            { step: 2, title: 'Seleção e Implementação de Software', description: 'Apoio na escolha de um sistema ERP focado em construção civil para integrar orçamento, planejamento, compras e controle da obra.' },
+                            { step: 3, title: 'Introdução ao BIM', description: 'Capacitação e desenvolvimento de um projeto-piloto em BIM para melhorar a compatibilização de projetos e reduzir erros na execução.' },
+                            { step: 4, title: 'Digitalização do Canteiro', description: 'Implementação de aplicativos móveis para Relatórios Diários de Obra (RDO), checklists de qualidade e gestão de segurança, eliminando o papel.' }
+                        ]
+                    },
+                    mercado: {
+                        questionnaire: [{
+                           question: "Como sua empresa prospecta novos negócios e clientes?",
+                           options: [
+                               { text: "Principalmente por indicação, não temos um processo ativo.", scores: {'Acesso a Mercados': 20, 'Gestão Comercial': 15, 'Marca': 40, 'Produtividade': 30} },
+                               { text: "Participamos de algumas licitações, mas com baixa taxa de sucesso.", scores: {'Acesso a Mercados': 40, 'Gestão Comercial': 35, 'Marca': 50, 'Produtividade': 40} },
+                               { text: "Temos uma equipe comercial estruturada e um funil de vendas definido.", scores: {'Acesso a Mercados': 75, 'Gestão Comercial': 80, 'Marca': 65, 'Produtividade': 50} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Forte mercado imobiliário e de obras públicas em Goiás.", "Reputação das construtoras locais em qualidade de entrega."],
+                            fraquezas: ["Processo comercial pouco estruturado, baseado em indicações.", "Dificuldade em elaborar propostas técnicas e comerciais competitivas para grandes projetos."],
+                            oportunidades: ["Participar de rodadas de negócios e missões empresariais para acessar grandes contratantes.", "Estruturar uma área de inteligência de mercado para identificar novas licitações e oportunidades."],
+                            ameacas: ["Entrada de grandes construtoras de outros estados no mercado goiano.", "Aumento da complexidade e exigências técnicas em licitações públicas."]
+                        },
+                        radar: {
+                            labels: ['Acesso a Mercados', 'Gestão Comercial', 'Marca', 'Produtividade'],
+                            potencial: [80, 75, 65, 50]
+                        },
+                        solutionName: "Programa MOVE+",
+                        solutionDescription: "Estruturação da área comercial para prospecção de obras maiores, clientes corporativos e participação em licitações, com desenvolvimento de competências em vendas e marketing.",
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico e Estratégia Comercial', description: 'Análise do portfólio de obras, definição do cliente ideal (ICP) e estruturação de uma proposta de valor clara e diferenciada.' },
+                            { step: 2, title: 'Implementação de Funil de Vendas', description: 'Organização do processo comercial com a implantação de um CRM para gerenciar oportunidades, desde a prospecção até o fechamento.' },
+                            { step: 3, title: 'Capacitação em Vendas B2B', description: 'Treinamento da equipe em técnicas de prospecção, negociação e elaboração de propostas de alto impacto para grandes clientes e licitações.' },
+                            { step: 4, title: 'Conexão com o Mercado', description: 'Participação em missões empresariais e rodadas de negócios para apresentar a construtora a potenciais parceiros e contratantes.' }
+                        ]
+                    }
+                }
+            },
+            'Metalmecânica': {
+                questions: [{
+                    question: "Qual é o maior desafio na sua operação metalmecânica hoje em Goiás?",
+                    answers: [
+                        { text: "Processos ineficientes e baixa produtividade das máquinas.", diagnosisKey: "produtividade" },
+                        { text: "Dificuldade em automatizar tarefas e coletar dados do chão de fábrica.", diagnosisKey: "automacao" },
+                        { text: "Necessidade de adequar máquinas antigas à norma de segurança NR12.", diagnosisKey: "seguranca" }
+                    ]
+                }],
+                diagnoses: {
+                    produtividade: {
+                        questionnaire: [{
+                           question: "Qual o tempo médio que sua máquina mais importante fica parada para troca de ferramentas ou setup?",
+                           options: [
+                               { text: "Horas. Cada troca é um grande evento que para a produção.", scores: {'Produtividade': 15, 'Automação': 20, 'Segurança': 40, 'Gestão': 30} },
+                               { text: "De 30 minutos a 1 hora. É um tempo considerável.", scores: {'Produtividade': 40, 'Automação': 30, 'Segurança': 50, 'Gestão': 50} },
+                               { text: "Menos de 15 minutos. Temos um processo otimizado.", scores: {'Produtividade': 75, 'Automação': 40, 'Segurança': 60, 'Gestão': 70} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Setor de base para o agronegócio e a construção civil, ambos fortes em Goiás.", "Capacidade técnica instalada e conhecimento em processos de usinagem e solda."],
+                            fraquezas: ["Parque fabril com máquinas antigas e pouco eficientes.", "Altos tempos de setup e paradas não programadas, resultando em baixa produtividade (OEE)."],
+                            oportunidades: ["Aplicação de manufatura enxuta através do Brasil Mais Produtivo para ganhos rápidos de eficiência.", "Modernização do maquinário com acesso a linhas de crédito subsidiadas (Conexão Financeira)."],
+                            ameacas: ["Concorrência de peças e componentes importados com menor custo.", "Aumento do custo da energia elétrica e do aço, principais insumos do setor."]
+                        },
+                        radar: {
+                            labels: ['Produtividade', 'Automação', 'Segurança', 'Gestão'],
+                            potencial: [85, 35, 50, 60]
+                        },
+                        solutionName: "Brasil Mais Produtivo (Manufatura Enxuta)",
+                        solutionDescription: 'Consultoria especializada para otimizar o chão de fábrica, reduzir o tempo de setup de máquinas, eliminar gargalos e aumentar a eficiência geral dos equipamentos (OEE).',
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico de OEE', description: 'Medição da Eficiência Geral do Equipamento para identificar as maiores perdas (paradas, velocidade, qualidade).' },
+                            { step: 2, title: 'Implementação de SMED', description: 'Aplicação da metodologia de Troca Rápida de Ferramenta para reduzir drasticamente o tempo de setup das máquinas.' },
+                            { step: 3, title: 'Manutenção Produtiva Total (TPM)', description: 'Capacitação dos operadores para realizarem a manutenção básica de seus equipamentos, prevenindo paradas inesperadas.' },
+                            { step: 4, title: 'Gestão Visual e KPIs', description: 'Criação de quadros de gestão à vista no chão de fábrica para monitorar a produção, metas e OEE em tempo real.' }
+                        ]
+                    },
+                    automacao: {
+                         questionnaire: [{
+                           question: "Como você coleta e utiliza os dados da sua produção (ex: peças produzidas, tempo de ciclo, paradas)?",
+                           options: [
+                               { text: "Manualmente, em pranchetas de papel.", scores: {'Automação': 10, 'Digitalização': 15, 'Produtividade': 25, 'Qualidade': 40} },
+                               { text: "Digitamos em planilhas ao final do dia ou turno.", scores: {'Automação': 30, 'Digitalização': 40, 'Produtividade': 45, 'Qualidade': 55} },
+                               { text: "Temos sensores que coletam dados automaticamente em tempo real.", scores: {'Automação': 70, 'Digitalização': 80, 'Produtividade': 65, 'Qualidade': 75} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Conhecimento técnico interno em mecânica e elétrica.", "Demanda crescente por peças com maior precisão e padronização."],
+                            fraquezas: ["Processos majoritariamente manuais e dependentes da habilidade do operador.", "Falta de dados em tempo real sobre a produção para tomada de decisão."],
+                            oportunidades: ["Acesso ao programa PIC para desenvolver projetos de automação e digitalização com subsídio.", "Parceria com o IST Automação do SENAI para criar soluções customizadas."],
+                            ameacas: ["Alto custo de robôs e equipamentos de automação.", "Risco de obsolescência tecnológica rápida."]
+                        },
+                        radar: {
+                            labels: ['Automação', 'Digitalização', 'Produtividade', 'Qualidade'],
+                            potencial: [70, 75, 80, 85]
+                        },
+                        solutionName: "PIC (Automatize & Digitalize)",
+                        solutionDescription: 'Desenvolvimento de projetos de automação industrial, sensorização de equipamentos para coleta de dados e uso de IA para prever manutenções e otimizar a produção.',
+                        actionPlan: [
+                            { step: 1, title: 'Mapeamento de Oportunidades', description: 'Especialistas do SENAI avaliam seu processo produtivo para identificar as tarefas com maior potencial de automação e retorno sobre o investimento.' },
+                            { step: 2, title: 'Projeto de Automação Piloto', description: 'Desenvolvimento de um projeto conceitual e executivo para automatizar uma célula de trabalho, como solda robotizada ou alimentação de máquinas.' },
+                            { step: 3, title: 'Sensorização e Coleta de Dados', description: 'Instalação de sensores em equipamentos-chave para monitorar a produção em tempo real (OEE, paradas, ciclos) através de um sistema MES.' },
+                            { step: 4, title: 'Inteligência Artificial Aplicada', description: 'Uso dos dados coletados para criar um agente de IA que pode prever falhas em máquinas, otimizar parâmetros de processo e gerar insights para a gestão.' }
+                        ]
+                    },
+                    seguranca: {
+                         questionnaire: [{
+                           question: "Suas máquinas possuem proteções físicas (grades, portas) e sistemas de segurança (sensores, botões de emergência) adequados e funcionais?",
+                           options: [
+                               { text: "Não, muitas máquinas operam com proteções improvisadas ou sem.", scores: {'Segurança (NR12)': 10, 'Gestão de Riscos': 15, 'Cultura': 30, 'Produtividade': 40} },
+                               { text: "Algumas sim, outras não. Não temos um padrão claro.", scores: {'Segurança (NR12)': 35, 'Gestão de Riscos': 40, 'Cultura': 50, 'Produtividade': 45} },
+                               { text: "Sim, todas as máquinas passaram por uma apreciação de risco e estão adequadas.", scores: {'Segurança (NR12)': 85, 'Gestão de Riscos': 80, 'Cultura': 70, 'Produtividade': 50} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Cultura de segurança já presente em muitas empresas do setor.", "Conhecimento interno sobre a operação das máquinas."],
+                            fraquezas: ["Parque fabril antigo, com muitas máquinas fora da norma NR12.", "Alto risco de acidentes de trabalho e passivos trabalhistas."],
+                            oportunidades: ["Acesso ao programa PIC para subsidiar o diagnóstico e o projeto de adequação à NR12.", "Melhoria do ambiente de trabalho, resultando em maior engajamento e produtividade dos colaboradores."],
+                            ameacas: ["Fiscalização do Ministério do Trabalho, com risco de multas pesadas e interdição de máquinas.", "Custo elevado para a adequação completa de todo o maquinário."]
+                        },
+                        radar: {
+                            labels: ['Segurança (NR12)', 'Gestão de Riscos', 'Cultura', 'Produtividade'],
+                            potencial: [95, 85, 70, 50]
+                        },
+                        solutionName: "PIC (Normatize - NR12)",
+                        solutionDescription: 'Consultoria completa para adequação de máquinas e equipamentos à norma regulamentadora NR12, garantindo a segurança dos trabalhadores e evitando passivos trabalhistas.',
+                        actionPlan: [
+                            { step: 1, title: 'Apreciação de Riscos', description: 'Engenheiro de segurança do SENAI realiza uma análise detalhada de cada máquina para identificar todas as não conformidades com a NR12.' },
+                            { step: 2, title: 'Projeto de Adequação', description: 'Elaboração de um projeto executivo completo, especificando todas as proteções mecânicas, sistemas elétricos e dispositivos de segurança necessários.' },
+                            { step: 3, title: 'Acompanhamento da Implementação', description: 'Orientação técnica para a equipe de manutenção da empresa (ou terceiros) durante a instalação dos sistemas de segurança projetados.' },
+                            { step: 4, title: 'Laudo e ART', description: 'Emissão de laudo de conformidade e Anotação de Responsabilidade Técnica (ART), validando que a máquina está segura e adequada à legislação.' }
+                        ]
+                    }
+                }
+            },
+            'Moda e Vestuário': {
+                questions: [{
+                    question: "Qual é o seu maior desafio para expandir sua marca de moda em Goiás?",
+                    answers: [
+                        { text: "Dificuldade em entrar em novas lojas ou vender para outros estados/países.", diagnosisKey: "mercado" },
+                        { text: "Falta de um processo criativo claro e dificuldade na gestão da coleção.", diagnosisKey: "criacao" },
+                        { text: "Baixa presença online e vendas fracas no e-commerce/redes sociais.", diagnosisKey: "digital" }
+                    ]
+                }],
+                diagnoses: {
+                    mercado: {
+                        questionnaire: [{
+                           question: "Como sua marca chega a novos clientes e lojistas?",
+                           options: [
+                               { text: "Passivamente, esperando que os clientes nos encontrem.", scores: {'Acesso a Mercados': 15, 'Gestão Comercial': 20, 'Marca': 40, 'Digitalização': 30} },
+                               { text: "Ativamente, mas sem uma estratégia, visitando algumas lojas ou feiras.", scores: {'Acesso a Mercados': 40, 'Gestão Comercial': 35, 'Marca': 55, 'Digitalização': 45} },
+                               { text: "De forma estratégica, com prospecção ativa, participação em feiras e marketing direcionado.", scores: {'Acesso a Mercados': 75, 'Gestão Comercial': 70, 'Marca': 65, 'Digitalização': 60} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Reconhecimento de Goiás como um polo de moda, especialmente em jeans e moda popular.", "Eventos de moda consolidados, como o Amarê Fashion."],
+                            fraquezas: ["Marcas com foco excessivo no mercado local/regional.", "Falta de preparo para negociação com grandes redes varejistas e mercado internacional."],
+                            oportunidades: ["Participação em missões empresariais subsidiadas para grandes feiras de moda nacionais.", "Programas como o MOVE+ para estruturar a área comercial e prospecção."],
+                            ameacas: ["Concorrência de marcas de outros estados com maior poder de marketing.", "Variações cambiais que afetam o custo de matéria-prima importada."]
+                        },
+                        radar: {
+                            labels: ['Acesso a Mercados', 'Gestão Comercial', 'Marca', 'Digitalização'],
+                            potencial: [80, 75, 65, 50]
+                        },
+                        solutionName: "Programa MOVE+ & Missões Empresariais",
+                        solutionDescription: 'Desenvolvimento de competências comerciais e conexão com compradores nacionais e internacionais através de jornadas estruturadas e participação em feiras estratégicas.',
+                         actionPlan: [
+                            { step: 1, title: 'Diagnóstico Comercial e de Mercado', description: 'Consultor do SEBRAE ajuda a definir o perfil de cliente ideal e a proposta de valor da sua marca para diferentes mercados.' },
+                            { step: 2, title: 'Capacitação em Vendas e Prospecção', description: 'Treinamento para profissionalizar a abordagem comercial, desde a prospecção de lojistas até a negociação com grandes compradores.' },
+                            { step: 3, title: 'Participação em Missão Empresarial', description: 'Viagem subsidiada para uma grande feira de moda (ex: em São Paulo), com agenda de negócios pré-definida para encontrar potenciais clientes.' },
+                            { step: 4, title: 'Acompanhamento Pós-Feira', description: 'Mentoria para realizar o follow-up dos contatos gerados, enviar propostas comerciais e efetivar os pedidos.' }
+                        ]
+                    },
+                    criacao: {
+                         questionnaire: [{
+                           question: "Como é o processo de planejamento e desenvolvimento da sua coleção?",
+                           options: [
+                               { text: "Intuitivo. Criamos as peças sem um planejamento formal de coleção.", scores: {'Gestão de Coleção': 20, 'Inovação': 30, 'Marca': 40, 'Comercial': 25} },
+                               { text: "Básico. Definimos um tema, mas o mix de produtos não é muito estratégico.", scores: {'Gestão de Coleção': 45, 'Inovação': 40, 'Marca': 55, 'Comercial': 40} },
+                               { text: "Estruturado. Usamos mapa de coleção, pesquisa de tendências e análise de vendas passadas.", scores: {'Gestão de Coleção': 80, 'Inovação': 65, 'Marca': 70, 'Comercial': 60} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Criatividade e identidade cultural forte como inspiração para as coleções.", "Acesso a matérias-primas e insumos diversificados."],
+                            fraquezas: ["Processo de criação de coleção pouco estruturado e baseado na intuição.", "Dificuldade em traduzir a identidade da marca em produtos com apelo comercial."],
+                            oportunidades: ["Aceleração no programa Sebrae Moda Autoral, com mentoria de grandes nomes do mercado.", "Uso de dados de consumo e tendências para orientar o desenvolvimento das coleções."],
+                            ameacas: ["Ciclo de tendências cada vez mais rápido (fast fashion).", "Dificuldade em se diferenciar em um mercado saturado de informações."]
+                        },
+                        radar: {
+                            labels: ['Gestão de Coleção', 'Inovação', 'Marca', 'Comercial'],
+                            potencial: [85, 70, 75, 60]
+                        },
+                        solutionName: "Programa Sebrae Moda Autoral",
+                        solutionDescription: 'Aceleração para marcas autorais, fortalecendo a identidade, inovação e processos de gestão, desde a concepção da coleção até o acesso ao mercado.',
+                        actionPlan: [
+                            { step: 1, title: 'Mentoria de Identidade de Marca', description: 'Sessões com especialistas para refinar o DNA da sua marca, garantindo que suas coleções contem uma história coesa e autêntica.' },
+                            { step: 2, title: 'Consultoria de Planejamento de Coleção', description: 'Apoio para estruturar o mix de produtos, definir um cronograma de desenvolvimento e criar um mapa de coleção comercialmente estratégico.' },
+                            { step: 3, title: 'Capacitação em Gestão e Finanças', description: 'Workshops e consultorias individuais para aprender a precificar corretamente suas peças, controlar os custos e garantir a lucratividade.' },
+                            { step: 4, title: 'Visibilidade e Mercado', description: 'Oportunidade de apresentar sua coleção em desfiles e showrooms de eventos importantes, como o Amarê Fashion (Semana da Moda Goiana).' }
+                        ]
+                    },
+                    digital: {
+                         questionnaire: [{
+                           question: "Qual canal digital gera a maior parte das suas vendas hoje?",
+                           options: [
+                               { text: "Nenhum. Nossas vendas são quase 100% presenciais.", scores: {'Presença Digital': 10, 'Vendas Online': 5, 'Marca': 30, 'Relacionamento': 20} },
+                               { text: "Redes sociais (Instagram/WhatsApp), mas de forma não automatizada.", scores: {'Presença Digital': 40, 'Vendas Online': 30, 'Marca': 50, 'Relacionamento': 50} },
+                               { text: "Temos um e-commerce que funciona bem e gera vendas recorrentes.", scores: {'Presença Digital': 75, 'Vendas Online': 80, 'Marca': 65, 'Relacionamento': 70} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Público consumidor altamente engajado em redes sociais.", "Facilidade de criar conteúdo visualmente atraente."],
+                            fraquezas: ["Presença digital amadora, sem estratégia definida.", "E-commerce com baixa performance ou inexistente."],
+                            oportunidades: ["Adesão ao Inove+Digital para subsidiar a criação de um e-commerce profissional e estratégias de marketing.", "Uso de influenciadores digitais de Goiás para promover a marca."],
+                            ameacas: ["Alto custo de tráfego pago para competir com grandes marcas.", "Necessidade constante de atualização e produção de conteúdo para as redes sociais."]
+                        },
+                        radar: {
+                            labels: ['Presença Digital', 'Vendas Online', 'Marca', 'Relacionamento'],
+                            potencial: [85, 75, 70, 80]
+                        },
+                        solutionName: "Inove+Digital",
+                        solutionDescription: 'Implementação de soluções digitais para fortalecer a marca, desde a criação de uma loja virtual robusta até a automação do atendimento ao cliente com IA.',
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico de Maturidade Digital', description: 'Consultor do IEL analisa sua presença online atual (site, redes sociais) e define um plano estratégico de transformação digital.' },
+                            { step: 2, title: 'Criação ou Otimização do E-commerce', description: 'Desenvolvimento de uma loja virtual profissional, segura e otimizada para vendas, com foco na experiência do usuário e em fotos de alta qualidade.' },
+                            { step: 3, title: 'Estratégia de Marketing Digital', description: 'Planejamento e execução de campanhas de tráfego pago e marketing de conteúdo para atrair clientes qualificados e fortalecer a marca.' },
+                            { step: 4, title: 'Automação e Relacionamento', description: 'Implementação de ferramentas como chatbots e agentes de IA para automatizar o atendimento, qualificar leads e melhorar a experiência do cliente.' }
+                        ]
+                    }
+                }
+            },
+            'Madeira e Mobiliário': {
+                questions: [{
+                    question: "Qual o maior desafio para sua marcenaria ou indústria de móveis em Goiás?",
+                    answers: [
+                        { text: "Processos lentos, com muito desperdício de matéria-prima.", diagnosisKey: "produtividade" },
+                        { text: "Contas de energia muito altas, impactando o custo final do produto.", diagnosisKey: "energia" },
+                        { text: "Dificuldade em organizar as finanças e conseguir crédito para novas máquinas.", diagnosisKey: "financas" }
+                    ]
+                }],
+                diagnoses: {
+                    produtividade: {
+                         questionnaire: [{
+                           question: "Sua empresa utiliza algum software para otimizar o plano de corte das chapas de madeira/MDF?",
+                           options: [
+                               { text: "Não, o marceneiro decide o corte na hora, com base na experiência.", scores: {'Produtividade': 20, 'Gestão de Custos': 15, 'Qualidade': 50, 'Digitalização': 10} },
+                               { text: "Sim, usamos um software simples, mas o processo ainda gera muitas sobras.", scores: {'Produtividade': 45, 'Gestão de Custos': 40, 'Qualidade': 60, 'Digitalização': 35} },
+                               { text: "Sim, nosso software de plano de corte é integrado à produção e minimiza o desperdício.", scores: {'Produtividade': 70, 'Gestão de Custos': 80, 'Qualidade': 70, 'Digitalização': 60} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Reconhecimento pela qualidade do mobiliário goiano, especialmente o rústico e de design.", "Mão de obra com alta habilidade artesanal."],
+                            fraquezas: ["Baixo aproveitamento das chapas de madeira/MDF, gerando alto custo com desperdício.", "Layout da marcenaria pouco funcional, causando movimentação excessiva e perda de tempo."],
+                            oportunidades: ["Implementar manufatura enxuta com o Brasil Mais Produtivo para otimizar o layout e o fluxo de produção.", "Uso de softwares de plano de corte para maximizar o aproveitamento da matéria-prima."],
+                            ameacas: ["Concorrência com móveis planejados de grandes redes.", "Aumento do preço da madeira e do MDF."]
+                        },
+                        radar: {
+                            labels: ['Produtividade', 'Gestão de Custos', 'Qualidade', 'Digitalização'],
+                            potencial: [80, 70, 75, 40]
+                        },
+                        solutionName: "Brasil Mais Produtivo (Manufatura Enxuta)",
+                        solutionDescription: 'Otimização do layout da marcenaria e dos processos de produção para reduzir o desperdício de matéria-prima e aumentar a velocidade de entrega.',
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico de Produção', description: 'Consultor do SENAI mapeia seu processo, desde o recebimento da chapa até a montagem final, para identificar os pontos de desperdício.' },
+                            { step: 2, title: 'Otimização do Layout e 5S', description: 'Reorganização do espaço físico da marcenaria para criar um fluxo de trabalho lógico e contínuo, aplicando os princípios do 5S.' },
+                            { step: 3, title: 'Consultoria em Plano de Corte', description: 'Implementação ou otimização do uso de softwares para planejar o corte das chapas, garantindo o máximo aproveitamento e reduzindo sobras.' },
+                            { step: 4, title: 'Padronização de Processos', description: 'Criação de Procedimentos Operacionais Padrão (POPs) para as principais tarefas, garantindo a qualidade e a eficiência de forma consistente.' }
+                        ]
+                    },
+                    energia: {
+                         questionnaire: [{
+                           question: "A conta de energia elétrica é um dos 3 maiores custos fixos/variáveis da sua empresa?",
+                           options: [
+                               { text: "Sim, é um dos nossos maiores problemas e afeta diretamente nossa margem.", scores: {'Eficiência Energética': 10, 'Sustentabilidade': 20, 'Gestão de Custos': 15, 'Finanças': 30} },
+                               { text: "É um custo relevante, mas conseguimos gerenciar.", scores: {'Eficiência Energética': 40, 'Sustentabilidade': 45, 'Gestão de Custos': 50, 'Finanças': 50} },
+                               { text: "Não, temos ações de eficiência ou geração própria que controlam esse custo.", scores: {'Eficiência Energética': 75, 'Sustentabilidade': 80, 'Gestão de Custos': 70, 'Finanças': 60} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Grande área de telhado disponível na maioria das marcenarias.", "Alta incidência solar no estado de Goiás."],
+                            fraquezas: ["Maquinário com alto consumo de energia elétrica.", "Custo com energia representando uma parcela significativa do custo total do produto."],
+                            oportunidades: ["Adesão ao programa Sebrae Energia para diagnóstico e acesso a fornecedores de energia solar.", "Redução drástica da conta de luz com a instalação de painéis fotovoltaicos."],
+                            ameacas: ["Aumento constante das tarifas de energia elétrica.", "Investimento inicial para a instalação de um sistema de energia solar."]
+                        },
+                        radar: {
+                            labels: ['Eficiência Energética', 'Sustentabilidade', 'Gestão de Custos', 'Finanças'],
+                            potencial: [85, 80, 70, 50]
+                        },
+                        solutionName: "Sebrae Energia",
+                        solutionDescription: 'Análise do consumo energético de máquinas e equipamentos para identificar oportunidades de economia e avaliar a viabilidade de fontes de energia renovável.',
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico Energético', description: 'Análise gratuita do seu perfil de consumo a partir da sua conta de luz para um primeiro entendimento do potencial de economia.' },
+                            { step: 2, title: 'Mapeamento de Consumo', description: 'Visita técnica de um consultor para medir o consumo dos principais equipamentos (serras, coletores de pó, compressores) e identificar desperdícios.' },
+                            { step: 3, title: 'Plano de Eficiência', description: 'Elaboração de um plano com ações de baixo custo para reduzir o consumo, como troca de iluminação, ajuste de motores e conscientização da equipe.' },
+                            { step: 4, title: 'Estudo de Viabilidade Solar', description: 'Conexão com empresas parceiras para realizar um estudo técnico e financeiro detalhado para a instalação de um sistema de energia fotovoltaica.' }
+                        ]
+                    },
+                    financas: {
+                         questionnaire: [{
+                           question: "Como você define o preço de venda de um móvel?",
+                           options: [
+                               { text: "Com base no preço da concorrência ou em um 'chute' sobre o custo.", scores: {'Gestão Financeira': 15, 'Precificação': 10, 'Acesso a Crédito': 20, 'Produtividade': 30} },
+                               { text: "Calculando o custo da matéria-prima e adicionando uma margem padrão.", scores: {'Gestão Financeira': 40, 'Precificação': 35, 'Acesso a Crédito': 30, 'Produtividade': 45} },
+                               { text: "Com uma ficha técnica que detalha todos os custos (material, mão de obra, custos fixos).", scores: {'Gestão Financeira': 70, 'Precificação': 80, 'Acesso a Crédito': 50, 'Produtividade': 60} }
+                           ]
+                        }],
+                        swot: {
+                            forcas: ["Setor com demanda constante e possibilidade de alta margem de lucro.", "Clientes dispostos a investir em móveis de qualidade."],
+                            fraquezas: ["Dificuldade na formação de preço de venda, muitas vezes baseada apenas no custo da matéria-prima.", "Falta de controle do fluxo de caixa e capital de giro."],
+                            oportunidades: ["Organizar as finanças com o programa Conexão Financeira.", "Acesso a linhas de crédito específicas para aquisição de máquinas mais modernas e produtivas."],
+                            ameacas: ["Inadimplência de clientes, impactando o fluxo de caixa.", "Gestão inadequada dos custos fixos e variáveis, levando a prejuízos não percebidos."]
+                        },
+                        radar: {
+                            labels: ['Gestão Financeira', 'Precificação', 'Acesso a Crédito', 'Produtividade'],
+                            potencial: [80, 85, 70, 55]
+                        },
+                        solutionName: "Programa Conexão Financeira",
+                        solutionDescription: 'Capacitação em gestão financeira (fluxo de caixa, precificação) e conexão com instituições financeiras para obter crédito para compra de novos maquinários.',
+                        actionPlan: [
+                            { step: 1, title: 'Diagnóstico Financeiro Completo', description: 'Consultor do SEBRAE realiza uma análise detalhada das suas finanças para identificar os principais pontos de melhoria.' },
+                            { step: 2, title: 'Oficina de Precificação', description: 'Capacitação para aprender a calcular o preço de venda dos seus móveis de forma correta, incluindo todos os custos, despesas e margem de lucro.' },
+                            { step: 3, title: 'Consultoria de Fluxo de Caixa', description: 'Implementação de uma ferramenta de controle de fluxo de caixa para gerenciar as entradas e saídas e garantir a saúde financeira do negócio.' },
+                            { step: 4, title: 'Preparação para o Crédito', description: 'Apoio na elaboração de um plano de negócios e na preparação da documentação para apresentar a bancos e cooperativas parceiras.' }
+                        ]
+                    }
+                }
+            }
+        };
+
+
+        const challengeContainer = document.getElementById('challenge-container');
+        const questionnaireContainer = document.getElementById('questionnaire-container');
+        const solutionContainer = document.getElementById('solution-container');
+        let wizardState = {};
+
+        function goToStep(stepNumber) {
+            document.querySelectorAll('.wizard-step').forEach(step => step.classList.remove('active'));
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+        }
+
+        function selectSegment(segmentName) {
+            wizardState = { segment: segmentName, questionnaireAnswers: {} };
+            document.querySelectorAll('#segment-selector .simulador-card').forEach(card => card.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            const data = simulatorData[wizardState.segment];
+            if (data && data.questions) {
+                renderChallenges();
+                goToStep(2);
+            }
+        }
+
+        function renderChallenges() {
+            const qData = simulatorData[wizardState.segment].questions[0];
+            challengeContainer.innerHTML = `
+                <p class="text-lg font-medium text-center mb-6">${qData.question}</p>
+                <div class="space-y-4 max-w-2xl mx-auto">
+                    ${qData.answers.map((answer, index) => `
+                        <div class="answer-option p-4 rounded-lg cursor-pointer text-center transition-colors duration-200" onclick="handleChallengeSelection(${index})">
+                            <p>${answer.text}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="text-center mt-8">
+                    <button onclick="resetSimulator()" class="text-sm text-indigo-400 hover:text-indigo-300">Voltar e escolher outro segmento</button>
+                </div>
+            `;
+        }
+        
+        function handleChallengeSelection(answerIndex) {
+            const answer = simulatorData[wizardState.segment].questions[0].answers[answerIndex];
+            wizardState.diagnosisKey = answer.diagnosisKey;
+            wizardState.questionnaireAnswers = {}; // Reset answers for new questionnaire
+            renderQuestionnaire();
+            goToStep(3);
+        }
+
+        function renderQuestionnaire() {
+            const questionnaire = simulatorData[wizardState.segment].diagnoses[wizardState.diagnosisKey].questionnaire;
+            let html = '';
+            questionnaire.forEach((q, index) => {
+                html += `
+                    <div class="mb-6">
+                        <p class="text-md font-medium text-center mb-4 text-gray-300">${q.question}</p>
+                        <div class="flex justify-center flex-wrap gap-2" id="question-${index}">
+                            ${q.options.map((opt, optIndex) => `
+                                <button class="question-option p-3 rounded-lg text-sm" onclick="selectQuestionOption(${index}, ${optIndex})">
+                                    ${opt.text}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            html += `
+                <div class="text-center mt-8">
+                    <button id="finish-diag-btn" onclick="finishDiagnosis()" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/10 opacity-50 cursor-not-allowed" disabled>Ver Meu Diagnóstico</button>
+                </div>
+                 <div class="text-center mt-4">
+                    <button onclick="goToStep(2)" class="text-sm text-indigo-400 hover:text-indigo-300">Voltar</button>
+                </div>
+            `;
+            questionnaireContainer.innerHTML = html;
+        }
+
+        function selectQuestionOption(qIndex, optIndex) {
+            wizardState.questionnaireAnswers[qIndex] = optIndex;
+            
+            const questionGroup = document.getElementById(`question-${qIndex}`);
+            questionGroup.querySelectorAll('.question-option').forEach((btn, index) => {
+                btn.classList.toggle('selected', index === optIndex);
+            });
+
+            const questionnaire = simulatorData[wizardState.segment].diagnoses[wizardState.diagnosisKey].questionnaire;
+            const allAnswered = Object.keys(wizardState.questionnaireAnswers).length === questionnaire.length;
+            const finishBtn = document.getElementById('finish-diag-btn');
+            
+            finishBtn.disabled = !allAnswered;
+            finishBtn.classList.toggle('opacity-50', !allAnswered);
+            finishBtn.classList.toggle('cursor-not-allowed', !allAnswered);
+        }
+
+        function finishDiagnosis() {
+            renderSolution();
+            goToStep(4);
+        }
+
+        function renderSolution() {
+            if (radarChart) {
+                radarChart.destroy();
+            }
+            const diagnosis = simulatorData[wizardState.segment].diagnoses[wizardState.diagnosisKey];
+            if (!diagnosis || !diagnosis.questionnaire) {
+                console.error("Diagnosis or questionnaire data is missing for the current selection.");
+                solutionContainer.innerHTML = `<p class="text-red-400 text-center">Ocorreu um erro ao carregar o diagnóstico. Por favor, tente novamente.</p>`;
+                return;
+            }
+
+            const questionnaire = diagnosis.questionnaire;
+            
+            let totalScores = {};
+            const scoreLabels = diagnosis.radar.labels;
+            scoreLabels.forEach(label => {
+                totalScores[label] = 0;
+            });
+
+            questionnaire.forEach((q, qIndex) => {
+                const selectedOptionIndex = wizardState.questionnaireAnswers[qIndex];
+                if (selectedOptionIndex !== undefined) {
+                    const selectedOption = q.options[selectedOptionIndex];
+                    if (selectedOption && selectedOption.scores) {
+                        for (const key in selectedOption.scores) {
+                            if (totalScores.hasOwnProperty(key)) {
+                                totalScores[key] += selectedOption.scores[key];
+                            }
+                        }
+                    }
+                }
+            });
+
+            const numQuestions = questionnaire.length;
+            const avgScores = {};
+            for (const key in totalScores) {
+                avgScores[key] = numQuestions > 0 ? totalScores[key] / numQuestions : 0;
+            }
+            
+            wizardState.initialScores = diagnosis.radar.labels.map(label => avgScores[label] || 20);
+
+            const swotHTML = `
+                <div class="mb-10">
+                    <h4 class="text-xl font-bold text-center mb-6 text-indigo-300">Análise SWOT Estratégica</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="swot-card rounded-lg p-4 bg-green-900/20 border-green-500">
+                            <h5 class="font-bold text-green-400 mb-2">Forças</h5>
+                            <ul class="list-disc list-inside text-sm text-gray-300 space-y-1">${diagnosis.swot.forcas.map(i => `<li>${i}</li>`).join('')}</ul>
+                        </div>
+                        <div class="swot-card rounded-lg p-4 bg-red-900/20 border-red-500">
+                            <h5 class="font-bold text-red-400 mb-2">Fraquezas</h5>
+                            <ul class="list-disc list-inside text-sm text-gray-300 space-y-1">${diagnosis.swot.fraquezas.map(i => `<li>${i}</li>`).join('')}</ul>
+                        </div>
+                        <div class="swot-card rounded-lg p-4 bg-blue-900/20 border-blue-500">
+                            <h5 class="font-bold text-blue-400 mb-2">Oportunidades</h5>
+                            <ul class="list-disc list-inside text-sm text-gray-300 space-y-1">${diagnosis.swot.oportunidades.map(i => `<li>${i}</li>`).join('')}</ul>
+                        </div>
+                        <div class="swot-card rounded-lg p-4 bg-yellow-900/20 border-yellow-500">
+                            <h5 class="font-bold text-yellow-400 mb-2">Ameaças</h5>
+                            <ul class="list-disc list-inside text-sm text-gray-300 space-y-1">${diagnosis.swot.ameacas.map(i => `<li>${i}</li>`).join('')}</ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const solutionHTML = `
+                <div>
+                    <h4 class="text-xl font-bold text-center mb-6 text-indigo-300">Solução Recomendada e Plano de Ação</h4>
+                    <div class="text-center mb-8 bg-gray-900/50 p-6 rounded-lg">
+                        <h5 class="text-2xl font-bold text-amber-400">${diagnosis.solutionName}</h5>
+                        <p class="text-gray-400 mt-2 max-w-2xl mx-auto">${diagnosis.solutionDescription}</p>
+                    </div>
+                    
+                    <div class="relative pl-8">
+                        <!-- Linha do tempo vertical -->
+                        <div class="absolute left-1 top-4 bottom-4 w-0.5 bg-indigo-800"></div>
+                        
+                        ${diagnosis.actionPlan.map(item => `
+                        <div class="relative mb-8">
+                             <div class="absolute -left-[38px] top-2.5 h-6 w-6 rounded-full bg-indigo-500 border-4 border-gray-800 flex items-center justify-center text-xs font-bold">${item.step}</div>
+                             <div class="ml-4">
+                                <h6 class="font-bold text-lg text-gray-200">${item.title}</h6>
+                                <p class="text-gray-400 text-sm">${item.description}</p>
+                             </div>
+                        </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            const radarHTML = `
+                 <div class="mt-12">
+                    <h4 class="text-xl font-bold text-center mb-6 text-indigo-300">Seu Radar de Desempenho</h4>
+                    <p class="text-center text-gray-400 text-sm mb-4">Este gráfico reflete seu status atual (baseado em suas respostas) versus o potencial de melhoria com a solução.</p>
+                    <div class="max-w-md mx-auto p-4 rounded-lg bg-gray-900/50">
+                        <canvas id="radarChartCanvas"></canvas>
+                    </div>
+                </div>
+            `;
+
+            solutionContainer.innerHTML = swotHTML + solutionHTML + radarHTML + `
+                <div class="text-center mt-12">
+                    <button onclick="resetSimulator()" class="text-sm font-semibold text-indigo-400 hover:text-indigo-300 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg">Iniciar Novo Diagnóstico</button>
+                </div>
+            `;
+            
+            renderRadarChart(diagnosis.radar);
+        }
+
+
+        function renderRadarChart(radarData) {
+            const ctx = document.getElementById('radarChartCanvas').getContext('2d');
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: radarData.labels,
+                    datasets: [
+                        {
+                            label: 'Status Atual',
+                            data: wizardState.initialScores,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgb(255, 99, 132)',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Potencial com Solução',
+                            data: radarData.potencial,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgb(54, 162, 235)',
+                            pointBackgroundColor: 'rgb(54, 162, 235)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgb(54, 162, 235)'
+                        }
+                    ]
+                },
+                options: {
+                    elements: {
+                        line: {
+                            borderWidth: 3
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                            pointLabels: { color: '#d1d5db', font: { size: 12 } },
+                            ticks: {
+                                color: '#1f2937',
+                                backdropColor: 'rgba(209, 213, 219, 0.8)',
+                                borderRadius: 4,
+                                stepSize: 20
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#d1d5db'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function resetSimulator() {
+            wizardState = {};
+            if (radarChart) {
+                radarChart.destroy();
+            }
+            document.querySelectorAll('#segment-selector .simulador-card').forEach(card => card.classList.remove('active'));
+            goToStep(1);
+        }
+
+    </script>
+</body>
+</html>
+
+
